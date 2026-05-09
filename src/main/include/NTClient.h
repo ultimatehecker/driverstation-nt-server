@@ -14,7 +14,7 @@ public:
     explicit NTClient(int teamNumber);
     ~NTClient();
 
-    void conenect();
+    void connect();
     RobotState getRobotState() const;
     bool isRobotConnected() const;
 

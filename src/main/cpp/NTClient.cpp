@@ -9,17 +9,20 @@ NTClient::~NTClient() {
     ntInstance.StopClient();
 }
 
-void NTClient::conenect() {
+void NTClient::connect() {
     ntInstance.StartClient4("driverstation-nt-server");
-    std::string robotAddress = std::format("10.{}.{}.2", teamNumber / 100, teamNumber % 100); // TODO: Check if this return 13.69
+
+    ntInstance.SetServerTeam(teamNumber, NT_DEFAULT_PORT4);
+    ntInstance.SetServer("172.22.11.2", NT_DEFAULT_PORT4);
+    ntInstance.SetServer("localhost", NT_DEFAULT_PORT4);
+
+    std::cout << "[NT] Connecting to " << teamNumber << "...\n";
 
     auto m_robotTable = ntInstance.GetTable(Configuration::NT::robotTable);
     auto m_fmsTable = ntInstance.GetTable(Configuration::NT::fmsTable);
 
     robotEnabledSubscriber = m_robotTable->GetBooleanTopic(Configuration::NT::isRobotEnabled).Subscribe(false);
     isRedAlliance = m_fmsTable->GetBooleanTopic(Configuration::NT::isRedAlliance).Subscribe(false);
-
-    std::cout << "[NT] Connecting to " << robotAddress << "...\n";
 }
 
 bool NTClient::isRobotConnected() const {
