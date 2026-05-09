@@ -6,7 +6,10 @@ namespace Configuration {
     constexpr int networkTablePollHz = 20;
 
     namespace NT {
+        constexpr const char* robotTable = "RobotState";
         constexpr const char* fmsTable = "FMSInfo";
+
+        constexpr const char* isRobotEnabled = "RobotEnabled";
         constexpr const char* isRedAlliance = "IsRedAlliance";
     }
 
