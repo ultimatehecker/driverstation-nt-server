@@ -30,7 +30,7 @@ bool SerialPort::isOpen() const {
 
 void SerialPort::close() {
     #ifdef _WIN32
-        if (handle != INVALID_HANDLE_VALUE {
+        if (handle != INVALID_HANDLE_VALUE) {
             CloseHandle(handle);
             handle = INVALID_HANDLE_VALUE;
         }
@@ -46,21 +46,20 @@ std::vector<std::string> SerialPort::listPorts() {
     std::vector<std::string> ports;
 
     #ifdef _WIN32
-        for (init i = 1; i <= 256; i++) {
+        for (int i = 1; i <= 256; i++) {
             std::string name = "COM" + std::to_string(i);
             std::string fullName = "\\\\.\\" + name;
             HANDLE h = CreateFileA(fullName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
             if (h != INVALID_HANDLE_VALUE) {
                 ports.push_back(name);
-                CloseHandle(h)
+                CloseHandle(h);
             }
         }
     #else
         DIR* dir = opendir("/dev");
-
         if (dir) {
-            struct dirent *entry;
+            struct dirent* entry;
             while ((entry = readdir(dir)) != nullptr) {
                 std::string name(entry->d_name);
                 if (name.find("ttyACM") == 0 || name.find("ttyUSB") == 0) {
@@ -97,7 +96,7 @@ bool SerialPort::open(const std::string& portName, int baudRate) {
 bool SerialPort::openPort(const std::string& portName, int baudRate) {
     #ifdef _WIN32
         std::string fullName = "\\\\.\\" + portName;
-        handle = CreateFileA(full_name.c_str(), GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+        handle = CreateFileA(fullName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
 
         if (handle == INVALID_HANDLE_VALUE) return false;
 
@@ -116,7 +115,7 @@ bool SerialPort::openPort(const std::string& portName, int baudRate) {
         }
 
         COMMTIMEOUTS timeouts = {};
-        timeouts.WriteCommTimeoutsConstant = 1000;
+        timeouts.WriteTotalTimeoutConstant = 100;
         timeouts.WriteTotalTimeoutMultiplier = 10;
         SetCommTimeouts(handle, &timeouts);
 
