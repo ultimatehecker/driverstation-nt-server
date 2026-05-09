@@ -32,6 +32,7 @@ add_executable(driverstation_nt_server
         src/main/cpp/SerialPort.cpp
         src/main/cpp/PatternResolver.cpp
         src/main/cpp/LarsonAnimator.cpp
+        src/main/include/Configuration.h
 )
 
 target_include_directories(driverstation_nt_server
