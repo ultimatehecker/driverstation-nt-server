@@ -1,4 +1,4 @@
-use crate::{animation::{animation::Animation, larson_animation::{LarsonAnimation, LarsonBounceMode}, rainbow_animation::{AnimationDirection, RainbowAnimation}, solid_animation::SolidAnimation, strobe_animation::StrobeAnimation}, color::RGBWColor};
+use crate::{animation::{animation::Animation, larson_animation::{LarsonAnimation, LarsonBounceMode::{self, FRONT}}, rainbow_animation::{AnimationDirection, RainbowAnimation}, solid_animation::SolidAnimation, strobe_animation::StrobeAnimation}, color::RGBWColor};
 
 pub const BUFFER_ARRAY_SIZE: usize = 22;
 
@@ -340,23 +340,46 @@ pub fn decode(buffer: &[u8]) -> Result<Animation, ()> {
     };
 }
 
-pub fn main() {
-    let animation = Animation::Solid(SolidAnimation::new(4, 30, RGBWColor::new(227, 148, 47, 255)));
-    println!("{animation:?}");
-
-    let mut bytes = [0u8; BUFFER_ARRAY_SIZE];
-    encode(&animation, &mut bytes);
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
 
+    #[test]
     fn encode_solid_animation() {
-        let animation = Animation::Solid(SolidAnimation::new(0, 30, RGBWColor::new(0, 0, 0, 255)));
+        let animation = Animation::Solid(SolidAnimation::new(2, 30, RGBWColor::new(255, 198, 219, 255)));
         let mut buffer: [u8; BUFFER_ARRAY_SIZE] = [0u8; BUFFER_ARRAY_SIZE];
-        encode(&animation, &mut buffer);
+        let _ = encode(&animation, &mut buffer);
 
-        assert_eq!(buffer, [0, 4, 0, 30, 0, 227, 148, 47, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+        assert_eq!(buffer, [0, 2, 0, 30, 0, 255, 198, 219, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]);
+    }
+
+    #[test]
+
+    fn encode_strobe_animation() {
+        let animation = Animation::Strobe(StrobeAnimation::new(0, 80, RGBWColor::new(18, 235, 200, 147), 120.0));
+        let mut buffer: [u8; BUFFER_ARRAY_SIZE] = [0u8; BUFFER_ARRAY_SIZE];
+        let _ = encode(&animation, &mut buffer);
+
+        assert_eq!(buffer, [1, 0, 0, 80, 0, 18, 235, 200, 147, 0, 0, 0, 0, 0, 0, 94, 64, 0, 0, 0, 0, 0]);
+    }
+
+    #[test]
+
+    fn encode_larson_animation() {
+        let animation = Animation::Larson(LarsonAnimation::new(2, 103, RGBWColor::new(187, 176, 245, 198), 7, LarsonBounceMode::CENTER, 120.0));
+        let mut buffer: [u8; BUFFER_ARRAY_SIZE] = [0u8; BUFFER_ARRAY_SIZE];
+        let _ = encode(&animation, &mut buffer);
+
+        assert_eq!(buffer, [2, 2, 0, 103, 0, 187, 176, 245, 198, 0, 0, 0, 0, 0, 0, 94, 64, 7, 1, 0, 0, 0]);
+    }
+
+    #[test]
+
+    fn encode_rainbow_animation() {
+        let animation = Animation::Rainbow(RainbowAnimation::new(2, 103, RGBWColor::new(187, 176, 245, 198), 0.996, AnimationDirection::FORWARD, 90.0));
+        let mut buffer: [u8; BUFFER_ARRAY_SIZE] = [0u8; BUFFER_ARRAY_SIZE];
+        let _ = encode(&animation, &mut buffer);
+
+        assert_eq!(buffer, [3, 2, 0, 103, 0, 0, 0, 0, 0, 0, 128, 86, 64, 172, 28, 90, 100, 59, 223, 239, 63, 0]);
     }
 }

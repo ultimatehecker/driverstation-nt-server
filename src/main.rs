@@ -17,6 +17,5 @@ use crate::animation::larson_animation::LarsonAnimation;
 use crate::animation::rainbow_animation::RainbowAnimation;
 
 fn main() {
-    protocol::main();
     serial::list_ports().unwrap();
 }
