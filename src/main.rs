@@ -1,5 +1,6 @@
 mod color;
 mod protocol;
+mod serial;
 mod animation {
     pub mod animation;
     pub mod solid_animation;
@@ -17,4 +18,5 @@ use crate::animation::rainbow_animation::RainbowAnimation;
 
 fn main() {
     protocol::main();
+    serial::list_ports().unwrap();
 }
